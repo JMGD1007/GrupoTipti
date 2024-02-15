@@ -1,4 +1,4 @@
-/*Primera Seccion*/
+/* START: BUSCADOR */
 .buscador{
     background-color: red;
     margin-top: 0.5%;
@@ -9,13 +9,21 @@
     margin-left: 2%;
     background-color: rgb(240, 229, 229);
     width: 50%;
-}
-.buttom_search{
-    cursor: pointer;
+    height: 20px;
+    font-size: 20px;
 }
 
+#buttom_search{
+    cursor: pointer;
+    height: 25px;
+}
+/* END: BUSCADOR */
+
+
+/* START: CANCIONES */
 .resultados{
     background-color: turquoise;
+    border: solid 1.5px black;
     width: 95%;
     height: 120px;
     margin-top: 5%;
@@ -23,61 +31,79 @@
     margin-right: 2%;
     overflow-x: hidden;
     overflow-y: scroll;
-    
-}
-.tittle2{
-    font-weight: bold;
-    font-size: 25px;
-    margin-bottom: 3%;
-}
-.cancion{
-    font-size: 20px;
-    margin-bottom: 3%;
-    width: 100%;
-    
-}
-.buttoms_res{
-    background-color: violet;
-    width: auto;
-    margin-right: 50%;
+    font-size: 22px;
 }
 
-.canciones_botones{
-    display: flex;
+.resultados li {
+    margin-left: 22px;
 }
+
+.resultados button {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+h2{
+    margin-top: 3%;
+    margin-left: 2%;
+    margin-bottom: 2%;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+#play-btn,
+#fav-btn,
+#add-btn,
+#trash-btn{
+    display: none;
+}
+
 .contenedor1 {
     width: 50%;
-    
     background-color: gray;
     border: solid 2px black;
 }
+/* END: CANCIONES */
+
+
+/* START: REPRODUCCION */
 .contenedor2{
     background-color: rgb(130, 159, 238);
     width: 100%;
-    height: 90vh;
-    
-
+    height: 90vh;  
 }
+
 .contenedor{
     display: flex;
     overflow: hidden;
 }
+
 .portada{
     height: 50%;
     background-color: blueviolet;
     display: flex;
     justify-content: center;
-    align-items: center;
-    
+    align-items: center;    
 }
+
 .info{
-    height: 30%;
+    margin-top: -1.5%;
+    height: 22%;
     background-color: rgb(43, 226, 153);
-    display: flex;
-    margin-left: 5%;
+    display: block;
+    margin-left: 30%;
+    margin-right: 30%;
+    font-weight: bold;
+    align-items: center;
 }
+
+.info p{
+    margin-bottom: -0.9%;
+    font-size: 19px;
+}
+
 .botones_reproduccion{
-    height: 30%;
+    height: 10%;
     background-color: pink;
     display: flex;
     justify-content: space-between;
@@ -85,3 +111,12 @@
     margin-right: 30%;
     margin-left: 30%;
 }
+
+#antes-btn,
+#adel-btn,
+#stop-btn,
+#loud-btn,
+#mute-btn{
+    cursor: pointer;
+}
+/* END: REPRODUCCION */
