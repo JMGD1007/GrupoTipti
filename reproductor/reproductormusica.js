@@ -165,7 +165,6 @@ const songs = [
     new Song({ id: "29", nombre: "cancion 29", artista: "artista 29", anio: "año 29", duracion: "duracion 29", genero: "genero 29", cover: "./imagenes/cancion29.jpg", urlSong: "./canciones/cancion29.mp3" }),
     new Song({ id: "30", nombre: "cancion 30", artista: "artista 30", anio: "año 30", duracion: "duracion 30", genero: "genero 30", cover: "./imagenes/cancion27.webp", urlSong: "./canciones/cancion30.mp3" }),
 ];
-console.log(    new Song({ id: "16", nombre: "cancion 16", artista: "artista 16", anio: "año 16", duracion: "duracion 16", genero: "genero 16", cover: {src: "./imagenes/cancion16.webp", width: 10, height: 100}, urlSong: "./canciones/cancion16.mp3" }))
 
 // Crear una instancia de Playlist y agregar canciones
 const playlist = new Playlist("resultados");
@@ -296,6 +295,68 @@ playlist.songs.forEach(song => {
 const reproductor = new Reproduccion(playlist);
 
 /* END: CLASES*/
+
+
+
+// Obtener referencia al botón de búsqueda
+const boton = document.getElementById('buttom_search');
+
+// Agregar evento click al botón de búsqueda
+boton.addEventListener('click', function () {
+    // Obtener el valor del input de búsqueda
+    const valor = input.value.trim().toLowerCase(); // Convertir a minúsculas y eliminar espacios en blanco al principio y al final
+
+    // Filtrar las canciones que coincidan con el valor de búsqueda
+    const cancionesFiltradas = playlist.songs.filter(song => song.nombre.toLowerCase().includes(valor));
+
+    // Limpiar el contenedor de resultados
+    resultadosContainer.innerHTML = '';
+
+    // Iterar sobre las canciones filtradas
+    cancionesFiltradas.forEach(song => {
+        // Crear un elemento <li> para representar la canción
+        const songElement = document.createElement("li");
+
+        // Crear un elemento <span> para el nombre de la canción
+        const songNameSpan = document.createElement("span");
+        songNameSpan.textContent = `${song.nombre}`;
+
+        // Seleccionar los botones relevantes de la canción
+        const playBtn = document.createElement("button");
+        playBtn.classList.add("fa-solid", "fa-play");
+        playBtn.addEventListener("click", function() {
+            // Lógica para reproducir la canción
+        });
+
+        const favselBtn = document.createElement("button");
+        favselBtn.classList.add("fa-solid", "fa-heart");
+        favselBtn.addEventListener("click", function() {
+            // Lógica para agregar a favoritos
+        });
+
+        const addBtn = document.createElement("button");
+        addBtn.classList.add("fa-solid", "fa-plus");
+        addBtn.addEventListener("click", function() {
+            // Lógica para agregar a la lista de reproducción
+        });
+
+        // Agregar los botones al elemento <li>
+        songElement.appendChild(playBtn);
+        songElement.appendChild(favselBtn);
+        songElement.appendChild(addBtn);
+
+        // Agregar el elemento <span> al elemento <li>
+        songElement.appendChild(songNameSpan);
+
+        // Agregar el elemento <li> al contenedor
+        resultadosContainer.appendChild(songElement);
+    });
+
+    // Si no se encontraron canciones
+    if (cancionesFiltradas.length === 0) {
+        resultadosContainer.innerHTML = '<li>No se encontraron coincidencias.</li>';
+    }
+});
 
 
 
