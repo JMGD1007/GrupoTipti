@@ -299,66 +299,125 @@ const reproductor = new Reproduccion(playlist);
 
 
 
-// Obtener referencia al botón de búsqueda
-const boton = document.getElementById('buttom_search');
 
-// Agregar evento click al botón de búsqueda
-boton.addEventListener('click', function () {
-    // Obtener el valor del input de búsqueda
-    const valor = input.value.trim().toLowerCase(); // Convertir a minúsculas y eliminar espacios en blanco al principio y al final
 
-    // Filtrar las canciones que coincidan con el valor de búsqueda
-    const cancionesFiltradas = playlist.songs.filter(song => song.nombre.toLowerCase().includes(valor));
 
-    // Limpiar el contenedor de resultados
-    resultadosContainer.innerHTML = '';
 
-    // Iterar sobre las canciones filtradas
-    cancionesFiltradas.forEach(song => {
-        // Crear un elemento <li> para representar la canción
-        const songElement = document.createElement("li");
 
-        // Crear un elemento <span> para el nombre de la canción
-        const songNameSpan = document.createElement("span");
-        songNameSpan.textContent = `${song.nombre}`;
 
-        // Seleccionar los botones relevantes de la canción
-        const playBtn = document.createElement("button");
-        playBtn.classList.add("fa-solid", "fa-play");
-        playBtn.addEventListener("click", function() {
-            // Lógica para reproducir la canción
-        });
 
-        const favselBtn = document.createElement("button");
-        favselBtn.classList.add("fa-solid", "fa-heart");
-        favselBtn.addEventListener("click", function() {
-            // Lógica para agregar a favoritos
-        });
 
-        const addBtn = document.createElement("button");
-        addBtn.classList.add("fa-solid", "fa-plus");
-        addBtn.addEventListener("click", function() {
-            // Lógica para agregar a la lista de reproducción
-        });
 
-        // Agregar los botones al elemento <li>
-        songElement.appendChild(playBtn);
-        songElement.appendChild(favselBtn);
-        songElement.appendChild(addBtn);
 
-        // Agregar el elemento <span> al elemento <li>
-        songElement.appendChild(songNameSpan);
 
-        // Agregar el elemento <li> al contenedor
-        resultadosContainer.appendChild(songElement);
+
+
+
+songs.volume = 0.1
+songs.currentTime = 245
+
+const input = document.getElementById('input')
+const search = document.getElementById('search')
+const play = document.getElementById('play-btn1')
+const pause = document.getElementById('pause')
+const mute = document.getElementById('mute')
+const sound = document.getElementById('sound')
+
+play.addEventListener('click', () => {
+  songs.play()
+})
+
+pause.addEventListener('click', () => {
+  audio.pause()
+})
+
+mute.addEventListener('click', () => {
+  audio.volume = 0
+})
+
+sound.addEventListener('click', () => {
+  audio.volume = 0.1
+})
+
+search.addEventListener('click', () => {
+  audio.src = input.value
+})
+
+audio.addEventListener('ended', () => {
+  alert('termino el audio, paso al siguiente')
+  audio.src = 'https://cdn.pixabay.com/audio/2024/01/16/audio_e2b992254f.mp3'
+  audio.play()
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* START: PORTADA e INFORMACION DE LA CANCION*/
+document.addEventListener('DOMContentLoaded', function () {
+    const portadaContainer = document.querySelector('#portada');
+
+    // Itera sobre la lista de canciones
+    songs.forEach(function (cancion) {
+        // Crea un elemento div para representar la canción
+        const cancionElement = document.createElement('div');
+        cancionElement.classList.add('cancion');
+
+        // Crea un elemento img para la cubierta de la canción
+        const coverElement = document.createElement('img');
+        coverElement.src = cancion.cover;
+
+        // Crea un elemento div para la información de la canción (nombre y artista)
+        const infoElement = document.createElement('div');
+        infoElement.classList.add('info-cancion');
+        infoElement.innerHTML = `
+            <h3>${cancion.nombre}</h3>
+            <p>${cancion.artista}</p>
+            <p>${cancion.anio}</p>
+            <p>${cancion.duracion}</p>
+            <p>${cancion.genero}</p>
+        `;
+
+        // Agrega el evento click a cada elemento de la canción
+        cancionElement.addEventListener('click', function () {
+            // Actualiza la imagen de la portada con la imagen de la canción seleccionada
+            portadaContainer.innerHTML = ''; // Limpiamos cualquier imagen previa
+            const coverSeleccionada = document.createElement('img');
+            coverSeleccionada.src = cancion.cover;
+            portadaContainer.appendChild(coverSeleccionada);
+
+        // Actualiza la información de la canción en el contenedor de información
+        const infoContainer = document.querySelector('.info');
+        infoContainer.innerHTML = `
+            <p><strong>Nombre:</strong> ${cancion.nombre}</p>
+            <p><strong>Artista:</strong> ${cancion.artista}</p>
+            <p><strong>Año:</strong> ${cancion.anio}</p>
+            <p><strong>Duración:</strong> ${cancion.duracion}</p>
+            <p><strong>Género:</strong> ${cancion.genero}</p>
+        `;
     });
 
-    // Si no se encontraron canciones
-    if (cancionesFiltradas.length === 0) {
-        resultadosContainer.innerHTML = '<li>No se encontraron coincidencias.</li>';
-    }
+        // Agrega el elemento de la cubierta y el elemento de la información al elemento de la canción
+        cancionElement.appendChild(coverElement);
+        cancionElement.appendChild(infoElement);
+
+        // Agrega el elemento de la canción al contenedor de canciones
+        portadaContainer.appendChild(cancionElement);
+    });
 });
 
-
-
-contenedorCover.innerHTML = `<img src="${reproductor.catalogodecanciones[0].cover}">`*/
+/* END: PORTADA e INFORMACION DE LA CANCION*/
