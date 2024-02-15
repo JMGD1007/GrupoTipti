@@ -1,21 +1,21 @@
-/* START: BUSCADOR*/
-const input = document.getElementById('input')
-const boton = document.getElementById('buttom_search')
-const lista = document.getElementById('lista')
-const canciones = ['Cancion 1', 'Cancion 2', 'Cancion 3 ', 'Cancion 22 '] // ESCRIBIR TODAS LAS CANCIONES
+/* START: BUSCADOR
+document.addEventListener('DOMContentLoaded', function () {
+    const input = document.getElementById('input');
+    const boton = document.getElementById('buttom_search');
+    const lista = document.getElementById('lista');
 
+    boton.addEventListener('click', function () {
+        const valor = input.value;
 
-boton.addEventListener('click', function () {
-    const valor = input.value
+        const cancionesQueCumplen = canciones.filter(c => c.includes(valor));
 
-    const cancionesQueCumplen = canciones.filter(c => c.includes(valor))
-
-    lista.innerHTML = cancionesQueCumplen.map(cancionQueCumplio => `<li>${cancionQueCumplio}</li>`)
-    if (cancionesQueCumplen.length === 0) {
-        lista.innerHTML = '<li>No se encontraron coincidencias.</li>'
-    }
-})
-/* END: BUSCADOR*/
+        lista.innerHTML = cancionesQueCumplen.map(cancionQueCumplio => `<li>${cancionQueCumplio}</li>`).join('');
+        if (cancionesQueCumplen.length === 0) {
+            lista.innerHTML = '<li>No se encontraron coincidencias.</li>';
+        }
+    });
+});
+ END: BUSCADOR*/
 
 
 /* START: CLASES*/
@@ -131,7 +131,7 @@ class Favorites extends Reproduccion {
     }
 }
 
-/* Continuando con las clases, se declara constantes a las canciones y playlist*/
+/* Continuando con las clases, se crea la lista de canciones y se agrega a "Catálogo"*/
 const songs = [
     new Song({ id: "1", nombre: "cancion 1", artista: "artista 1", anio: "año 1", duracion: "duracion 1", genero: "genero 1", cover: "./imagenes/cancion1.jpg", urlSong: "./canciones/cancion1.mp3" }),
     new Song({ id: "2", nombre: "cancion 2", artista: "artista 2", anio: "año 2", duracion: "duracion 2", genero: "genero 2", cover: "./imagenes/cancion2.jpg", urlSong: "./canciones/cancion2.mp3" }),
@@ -152,7 +152,7 @@ const songs = [
     new Song({ id: "17", nombre: "cancion 17", artista: "artista 17", anio: "año 17", duracion: "duracion 17", genero: "genero 17", cover: "./imagenes/cancion17.webp", urlSong: "./canciones/cancion17.mp3" }),
     new Song({ id: "18", nombre: "cancion 18", artista: "artista 18", anio: "año 18", duracion: "duracion 18", genero: "genero 18", cover: "./imagenes/cancion18.webp", urlSong: "./canciones/cancion18.mp3" }),
     new Song({ id: "19", nombre: "cancion 19", artista: "artista 19", anio: "año 19", duracion: "duracion 19", genero: "genero 19", cover: "./imagenes/cancion19.webp", urlSong: "./canciones/cancion19.mp3" }),
-    new Song({ nombre: "cancion 20", artista: "artista 20", anio: "año 20", duracion: "duracion 20", genero: "genero 20", cover: "./imagenes/cancion20.webp", urlSong: "./canciones/cancion20.mp3" }),
+    new Song({ id: "20", nombre: "cancion 20", artista: "artista 20", anio: "año 20", duracion: "duracion 20", genero: "genero 20", cover: "./imagenes/cancion20.webp", urlSong: "./canciones/cancion20.mp3" }),
     new Song({ id: "21", nombre: "cancion 21", artista: "artista 21", anio: "año 21", duracion: "duracion 21", genero: "genero 21", cover: "./imagenes/cancion21.webp", urlSong: "./canciones/cancion21.mp3" }),
     new Song({ id: "22", nombre: "cancion 22", artista: "artista 22", anio: "año 22", duracion: "duracion 22", genero: "genero 22", cover: "./imagenes/cancion22.jpg", urlSong: "./canciones/cancion22.mp3" }),
     new Song({ id: "23", nombre: "cancion 23", artista: "artista 23", anio: "año 23", duracion: "duracion 23", genero: "genero 23", cover: "./imagenes/cancion23.webp", urlSong: "./canciones/cancion23.mp3" }),
@@ -165,22 +165,264 @@ const songs = [
     new Song({ id: "30", nombre: "cancion 30", artista: "artista 30", anio: "año 30", duracion: "duracion 30", genero: "genero 30", cover: "./imagenes/cancion27.webp", urlSong: "./canciones/cancion30.mp3" }),
 ];
 
-const playlist = new Playlist("My Playlist");
-playlist.addSong(songs[0]);
-playlist.addSong(songs[1]);
+// Crear una instancia de Playlist y agregar canciones
+const playlist = new Playlist("resultados");
+songs.forEach(song => playlist.addSong(song));
 
-const favorites = new Favorites();
-favorites.addSong(songs[0]);
+// Obtener una referencia al contenedor donde queremos mostrar las canciones
+const resultadosContainer = document.getElementById("resultados");
 
+// Iterar sobre las canciones en la playlist y agregarlas al contenedor
+playlist.songs.forEach(song => {
+    // Crear un elemento <li> para representar la canción
+    const songElement = document.createElement("li");
+
+    // Crear un elemento <span> para el nombre de la canción
+    const songNameSpan = document.createElement("span");
+    songNameSpan.textContent = `${song.nombre}`; 
+
+    // 1. BOTÓN DE REPRODUCCIÓN   
+    // Crear botón de reproducción
+    const playBtn = document.createElement("button");
+    playBtn.classList.add("fa-solid", "fa-play");
+    playBtn.addEventListener("click", function() {
+        // Obtener la URL de la canción
+        const urlSong = song.urlSong;
+        // Crear un elemento de audio
+        const audio = new Audio(urlSong);
+        // Reproducir la canción
+        audio.play();
+    });
+
+    // 2. BOTÓN DE FAVORITO (CORAZÓN) y su comportamiento en MIS FAVORITOS
+    // Obtener referencia al contenedor "myplaylist"
+    const myPlaylistContainer = document.querySelector('#myplaylist');
+
+    // Variable para rastrear si la canción ya ha sido agregada
+    let isSongAdded = false;
+
+    // Crear botón de corazón favorito
+    const favselBtn = document.createElement("button");
+    favselBtn.classList.add("fa-solid", "fa-heart");
+
+    // Escuchar el evento de clic en el botón de corazón favorito
+    favselBtn.addEventListener("click", function() {
+        // Verificar si la canción ya ha sido agregada
+        if (!isSongAdded) {
+            // Clonar la canción seleccionada
+            const clonedSong = this.parentElement.cloneNode(true); 
+
+                    // Eliminar el botón de agregar de la copia
+        clonedSong.querySelector('.fa-solid.fa-plus').remove();
+        
+        // Crear el botón de eliminar
+        const trashBtn = document.createElement("button");
+        trashBtn.classList.add("fa-solid", "fa-trash");
+        
+        // Escuchar el evento de clic en el botón de eliminar
+        trashBtn.addEventListener("click", function() {
+            // Eliminar la canción del contenedor "myplaylist"
+            this.parentElement.remove();
+            // Actualizar el estado de la canción agregada
+            isSongAdded = false;
+        });
+        
+        // Agregar el botón de eliminar a la copia
+        clonedSong.appendChild(trashBtn);
+
+        // Agregar el elemento clonado al contenedor "myplaylist"
+        myPlaylistContainer.appendChild(clonedSong);
+
+        // Actualizar el estado de la canción agregada
+        isSongAdded = true;
+    }
+});
+
+    // 3.BOTÓN DE AGREGAR (SUMA)
+    // Obtener referencia al contenedor "favoritos"
+    const favoritosContainer = document.querySelector('#favoritos');
+
+    // Variable para rastrear si la canción ya ha sido agregada a favoritos
+    let isSongAddedToFavorites = false;
+    // Crear botón de añadir a la lista de reproducción
+    const addBtn = document.createElement("button");
+    addBtn.classList.add("fa-solid", "fa-plus");
+    addBtn.addEventListener("click", function() {
+    // Verificar si la canción ya ha sido agregada a favoritos
+        if (!isSongAddedToFavorites) {
+            // Clonar la canción seleccionada
+            const clonedSong = this.parentElement.cloneNode(true); // Clona el nodo completo con todos sus descendientes
+            
+            // Eliminar el botón de añadir de la copia
+            clonedSong.querySelector('.fa-solid.fa-heart').remove();
+            
+            // Crear el botón de eliminar
+            const trashBtn = document.createElement("button");
+            trashBtn.classList.add("fa-solid", "fa-trash");
+            
+            // Escuchar el evento de clic en el botón de eliminar
+            trashBtn.addEventListener("click", function() {
+                // Eliminar la canción del contenedor "favoritos"
+                this.parentElement.remove();
+                // Actualizar el estado de la canción agregada a favoritos
+                isSongAddedToFavorites = false;
+            });
+            
+            // Agregar el botón de eliminar a la copia
+            clonedSong.appendChild(trashBtn);
+
+            // Agregar el elemento clonado al contenedor "favoritos"
+            favoritosContainer.appendChild(clonedSong);
+
+            // Actualizar el estado de la canción agregada a favoritos
+            isSongAddedToFavorites = true;
+        }
+    });
+
+
+    // Agregar el nombre de la canción y los botones al elemento <li>
+    songElement.appendChild(songNameSpan);
+    songElement.appendChild(playBtn);
+    songElement.appendChild(favselBtn);
+    songElement.appendChild(addBtn);
+
+    // Agregar el elemento <li> al contenedor
+    resultadosContainer.appendChild(songElement);
+});
+
+// Crear una instancia de Reproduccion con la playlist
 const reproductor = new Reproduccion(playlist);
-//Reproduccion.play(); OJO CON ESTO, DEBEMOS CHEQUEAR SI FUNCIONA ASÍ O SI HAY QUE CAMBIAR ALGO
 
 /* END: CLASES*/
 
 
-/* START: BOTONES */
 
-/* Botones de portada*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+songs.volume = 0.1
+songs.currentTime = 245
+
+const input = document.getElementById('input')
+const search = document.getElementById('search')
+const play = document.getElementById('play-btn1')
+const pause = document.getElementById('pause')
+const mute = document.getElementById('mute')
+const sound = document.getElementById('sound')
+
+play.addEventListener('click', () => {
+  songs.play()
+})
+
+pause.addEventListener('click', () => {
+  audio.pause()
+})
+
+mute.addEventListener('click', () => {
+  audio.volume = 0
+})
+
+sound.addEventListener('click', () => {
+  audio.volume = 0.1
+})
+
+search.addEventListener('click', () => {
+  audio.src = input.value
+})
+
+audio.addEventListener('ended', () => {
+  alert('termino el audio, paso al siguiente')
+  audio.src = 'https://cdn.pixabay.com/audio/2024/01/16/audio_e2b992254f.mp3'
+  audio.play()
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* START: PORTADA e INFORMACION DE LA CANCION*/
+document.addEventListener('DOMContentLoaded', function () {
+    const portadaContainer = document.querySelector('#portada');
+
+    // Itera sobre la lista de canciones
+    songs.forEach(function (cancion) {
+        // Crea un elemento div para representar la canción
+        const cancionElement = document.createElement('div');
+        cancionElement.classList.add('cancion');
+
+        // Crea un elemento img para la cubierta de la canción
+        const coverElement = document.createElement('img');
+        coverElement.src = cancion.cover;
+
+        // Crea un elemento div para la información de la canción (nombre y artista)
+        const infoElement = document.createElement('div');
+        infoElement.classList.add('info-cancion');
+        infoElement.innerHTML = `
+            <h3>${cancion.nombre}</h3>
+            <p>${cancion.artista}</p>
+            <p>${cancion.anio}</p>
+            <p>${cancion.duracion}</p>
+            <p>${cancion.genero}</p>
+        `;
+
+        // Agrega el evento click a cada elemento de la canción
+        cancionElement.addEventListener('click', function () {
+            // Actualiza la imagen de la portada con la imagen de la canción seleccionada
+            portadaContainer.innerHTML = ''; // Limpiamos cualquier imagen previa
+            const coverSeleccionada = document.createElement('img');
+            coverSeleccionada.src = cancion.cover;
+            portadaContainer.appendChild(coverSeleccionada);
+
+        // Actualiza la información de la canción en el contenedor de información
+        const infoContainer = document.querySelector('.info');
+        infoContainer.innerHTML = `
+            <p><strong>Nombre:</strong> ${cancion.nombre}</p>
+            <p><strong>Artista:</strong> ${cancion.artista}</p>
+            <p><strong>Año:</strong> ${cancion.anio}</p>
+            <p><strong>Duración:</strong> ${cancion.duracion}</p>
+            <p><strong>Género:</strong> ${cancion.genero}</p>
+        `;
+    });
+
+        // Agrega el elemento de la cubierta y el elemento de la información al elemento de la canción
+        cancionElement.appendChild(coverElement);
+        cancionElement.appendChild(infoElement);
+
+        // Agrega el elemento de la canción al contenedor de canciones
+        portadaContainer.appendChild(cancionElement);
+    });
+});
+
+/* END: PORTADA e INFORMACION DE LA CANCION*/
+
+
+
+/* START: BOTONES REPRODUCCION*/
 // Obtener referencias a los elementos HTML
 const audioPlayer = document.getElementById("audioPlayer");
 const playBtn = document.getElementById("play-btn");
@@ -217,7 +459,6 @@ function stopSong() {
 const nowplaylist = []; // Se coloca array, porque se considera que el usuario agregará canciones a My Playlist
 let currentSongIndex = 0; // Índice de la canción actual
 
-// Función para avanzar a la siguiente canción
 function skipForward() {
     currentSongIndex++;
     if (currentSongIndex >= playlist.length) {
@@ -225,6 +466,25 @@ function skipForward() {
     }
     playSong();
 }
+
+// Función para que cambie la portada e info de la canción a la siguiente
+function updateSongInfo() {
+    const currentSong = playlist[currentSongIndex]; // Obtiene la canción actual
+    const coverElement = document.querySelector('#portada img');
+    coverElement.src = currentSong.cover; // Actualiza la imagen de la portada
+
+    const infoElement = document.querySelector('.info');
+    infoElement.innerHTML = `
+        <p>Nombre: ${currentSong.nombre}</p>
+        <p>Artista: ${currentSong.artista}</p>
+        <p>Año: ${currentSong.anio}</p>
+        <p>Duración: ${currentSong.duracion}</p>
+        <p>Género: ${currentSong.genero}</p>
+    `;
+}
+
+// Llama a la función para actualizar la información de la primera canción al cargar la página
+updateSongInfo();
 
 // Función para retroceder a la canción anterior
 function skipBackward() {
@@ -256,12 +516,17 @@ function decreaseVolume() {
         audioPlayer.volume -= 0.1; // Disminuir el volumen en 0.1
     }
 }
-*/ 
+*/
 
 // Función para activar/desactivar el mute
 function toggleMute() {
     audioPlayer.muted = !audioPlayer.muted; // Alternar entre silencio y sonido
 }
+
+
+/* END: BOTON DE PORTADA*/
+
+
 
 /* Botones de playlist, mis canciones y favoritos*/
 // Obtener referencias a los botones y la lista de canciones
@@ -292,10 +557,10 @@ function addToPlaylist(event) {
     const songName = event.target.parentElement.textContent.trim(); // Obtener el nombre de la canción
     const newSong = document.createElement('li');
     newSong.textContent = songName;
-    playlist.appendChild(newSong);
+    playlist2.appendChild(newSong);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const favBtns = document.querySelectorAll('.myplaylist .fa-solid.fa-heart');
     const trashBtns = document.querySelectorAll('.myplaylist .fa-solid.fa-trash');
     const favList = document.querySelector('.favoritos');
@@ -328,11 +593,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    const addBtns = document.querySelectorAll('.favoritos .fa-solid.fa-plus');
-    const favBtns = document.querySelectorAll('.favoritos .fa-solid.fa-heart');
+document.addEventListener('DOMContentLoaded', function () {
+    const addBtns = document.querySelectorAll('.canciones .fa-solid.fa-plus');
+    const favBtns = document.querySelectorAll('.canciones .fa-solid.fa-heart');
     const playlist = document.querySelector('.myplaylist');
-    const favorites = document.querySelector('.favoritos');
+    const favoritos = document.querySelector('.favoritos');
 
     // Agregar eventos de clic a los botones de añadir
     addBtns.forEach(btn => {
@@ -448,4 +713,3 @@ audio.play()
 
 const contenedorCover = document.getElementById('portada')
 contenedorCover.innerHTML = `<img src="${reproductor.catalogodecanciones[0].cover}">`*/
-
